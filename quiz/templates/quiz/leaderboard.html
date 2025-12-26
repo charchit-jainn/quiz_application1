@@ -1,0 +1,40 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Leaderboard - {{ quiz.title }}</title>
+    <link rel="stylesheet" href="{% static 'quiz/style.css' %}">
+</head>
+
+<body>
+<div class="container">
+    <h1>🏆 Leaderboard</h1>
+    <h2>{{ quiz.title }}</h2>
+
+    {% if results %}
+        <table style="width:100%; border-collapse: collapse;">
+            <tr style="background:#f1f1f1;">
+                <th>#</th>
+                <th>User</th>
+                <th>Score</th>
+                <th>Date</th>
+            </tr>
+
+            {% for r in results %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ r.user.username }}</td>
+                <td>{{ r.score }}</td>
+                <td>{{ r.created_at|date:"d M Y H:i" }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>No attempts yet.</p>
+    {% endif %}
+
+    <br>
+    <a href="/">← Back to Home</a>
+</div>
+</body>
+</html>

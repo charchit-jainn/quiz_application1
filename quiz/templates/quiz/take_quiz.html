@@ -1,0 +1,93 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ quiz.title }}</title>
+   <link rel="stylesheet" href="{% static 'quiz/style.css' %}">
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="top-bar">
+        <div>
+            <h1>{{ quiz.title }}</h1>
+            <p style="color:#6c757d">{{ quiz.description }}</p>
+        </div>
+        <div id="timer" class="timer"></div>
+    </div>
+
+    <form method="post" id="quizForm">
+        {% csrf_token %}
+
+        {% for question in questions %}
+            <div class="question">
+                <p><strong>{{ forloop.counter }}. {{ question.text }}</strong></p>
+
+                <label>
+                    <input type="radio" name="{{ question.id }}" value="option1">
+                    {{ question.option1 }}
+                </label>
+
+                <label>
+                    <input type="radio" name="{{ question.id }}" value="option2">
+                    {{ question.option2 }}
+                </label>
+
+                <label>
+                    <input type="radio" name="{{ question.id }}" value="option3">
+                    {{ question.option3 }}
+                </label>
+
+                <label>
+                    <input type="radio" name="{{ question.id }}" value="option4">
+                    {{ question.option4 }}
+                </label>
+            </div>
+        {% endfor %}
+
+        <button type="submit" class="btn">Submit Quiz</button>
+    </form>
+
+</div>
+
+<script>
+let timeLeft = parseInt("{{ quiz.duration|default:0 }}") * 60;
+let submitted = false;
+
+const timerElement = document.getElementById("timer");
+const form = document.getElementById("quizForm");
+
+form.addEventListener("submit", () => {
+    submitted = true;
+});
+
+const countdown = setInterval(() => {
+
+    let minutes = Math.floor(timeLeft / 60);
+    let seconds = timeLeft % 60;
+
+    timerElement.innerText =
+        `⏱ ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+
+    if (timeLeft <= 60) {
+        timerElement.style.color = "red";
+    }
+
+    if (timeLeft <= 0 && !submitted) {
+        clearInterval(countdown);
+        submitted = true;
+        alert("Time is up! Submitting quiz.");
+        form.submit();
+    }
+
+    timeLeft--;
+
+}, 1000);
+</script>
+
+</body>
+</html>

@@ -1,0 +1,27 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Quiz App</title>
+    <link rel="stylesheet" href="{% static 'quiz/style.css' %}">
+</head>
+<body>
+
+<div class="container">
+    <h1>Quiz Application</h1>
+
+    {% if quizzes %}
+        {% for quiz in quizzes %}
+            <div class="quiz-card">
+                <h2>{{ quiz.title }}</h2>
+                <p>{{ quiz.description }}</p>
+                <a href="{% url 'take_quiz' quiz.id %}">Start Quiz →</a>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No quizzes available.</p>
+    {% endif %}
+</div>
+
+</body>
+</html>
